@@ -1,65 +1,74 @@
-document.addEventListener('DOMContentLoaded', function() {
-    const searchInput = document.getElementById('searchInput');
-    const itemsList = document.getElementById('itemsList').getElementsByTagName('li');
-    const modal = document.getElementById('itemModal');
-    const modalImage = document.getElementById('modalImage');
-    const modalClose = document.querySelector('.close');
+function pesquisar() {
+    var input = document.getElementById('searchInput').value.toLowerCase();
+    var imageSlider = document.querySelector('.image-slider');
 
-    // Adicionar evento de clique para os itens da lista
-    Array.from(itemsList).forEach(function(item) {
-        const img = item.querySelector('img');
-
-        img.addEventListener('click', function() {
-            modal.style.display = 'block';
-            modalImage.src = img.src;
-            modalImage.alt = img.alt;
-        });
-    });
-
-    // Fechar o modal ao clicar no botão de fechar
-    modalClose.addEventListener('click', function() {
-        modal.style.display = 'none';
-    });
-
-    // Fechar o modal ao clicar fora da imagem
-    window.addEventListener('click', function(event) {
-        if (event.target === modal) {
-            modal.style.display = 'none';
-        }
-    });
-
-    // Evento de pesquisa ao pressionar Enter ou clicar no botão de pesquisa
-    function performSearch() {
-        const searchTerm = searchInput.value.trim().toLowerCase();
-
-        Array.from(itemsList).forEach(function(item) {
-            const text = item.textContent.toLowerCase();
-            const imgAlt = item.querySelector('img').alt.toLowerCase();
-            
-            if ((searchTerm === 'verdura' && (text.includes('item 1') || text.includes('item 2') || text.includes('item 3') || imgAlt.includes('item 1') || imgAlt.includes('item 2') || imgAlt.includes('item 3')))
-                || (searchTerm === 'vegetal' && (text.includes('item 4') || text.includes('item 5') || text.includes('item 6') || text.includes('item 7') || imgAlt.includes('item 4') || imgAlt.includes('item 5') || imgAlt.includes('item 6') || imgAlt.includes('item 7')))) {
-                item.style.display = 'block';
-            } else {
-                item.style.display = 'none';
-            }
-        });
-
-        // Mostrar ou ocultar a div .container baseado na presença de itens visíveis
-        const container = document.querySelector('.container');
-        const visibleItems = document.getElementById('itemsList').querySelectorAll('li[style="display: block;"]');
-        
-        if (visibleItems.length > 0) {
-            container.style.display = 'block';
-        } else {
-            container.style.display = 'none';
-        }
+    // Lógica para mostrar imagens com base na pesquisa
+    if (input.includes('verdura')) {
+        showImages([
+            { src: 'alface.png', alt: 'Alface', price: 'R$ 2,50/unidade' },
+            { src: 'couve.png', alt: 'Couve', price: 'R$ 3,00/unidade' },
+            { src: 'espinafre.png', alt: 'Espinafre', price: 'R$ 2,00/unidade' }
+        ]);
+    } else if (input.includes('vegetal')) {
+        showImages([
+            { src: 'cenoura.png', alt: 'Cenoura', price: 'R$ 1,50/kg' },
+            { src: 'beterraba.png', alt: 'Beterraba', price: 'R$ 2,00/unidade' },
+            { src: 'abobrinha.png', alt: 'Abobrinha', price: 'R$ 3,50/kg' }
+        ]);
+    } else {
+        // Se não for uma pesquisa específica, mostra apenas as imagens de sementes
+        showSementes();
     }
 
-    searchInput.addEventListener('keyup', function(event) {
-        if (event.key === 'Enter') {
-            performSearch();
-        }
-    });
+    function showSementes() {
+        // Limpa as imagens existentes
+        imageSlider.innerHTML = '';
 
-    document.getElementById('searchButton').addEventListener('click', performSearch);
-});
+        // Adiciona as imagens de sementes ao slider com os preços
+        var sementes = [
+            { src: 'semente1.jpg', alt: 'Semente 1', price: 'R$ 5,00' },
+            { src: 'semente2.jpg', alt: 'Semente 2', price: 'R$ 4,50' },
+            { src: 'semente3.jpg', alt: 'Semente 3', price: 'R$ 6,00' }
+        ];
+
+        sementes.forEach(function(semente) {
+            var item = document.createElement('div');
+            item.classList.add('item');
+
+            var img = document.createElement('img');
+            img.src = semente.src;
+            img.alt = semente.alt;
+
+            var price = document.createElement('p');
+            price.classList.add('price');
+            price.textContent = semente.price;
+
+            item.appendChild(img);
+            item.appendChild(price);
+            imageSlider.appendChild(item);
+        });
+    }
+
+    function showImages(images) {
+        // Limpa as imagens existentes
+        imageSlider.innerHTML = '';
+
+        // Adiciona as novas imagens ao slider com os preços
+        images.forEach(function(image) {
+            var item = document.createElement('div');
+            item.classList.add('item');
+
+            var img = document.createElement('img');
+            img.src = image.src;
+            img.alt = image.alt;
+
+            var price = document.createElement('p');
+            price.classList.add('price');
+            price.textContent = image.price;
+
+            item.appendChild(img);
+            item.appendChild(price);
+            imageSlider.appendChild(item);
+        });
+    }
+}
